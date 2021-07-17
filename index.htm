@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Система Управления ATMINER S19</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <script>
+		strLED3 = "";
+		strLED4 = "";
+        strLED5 = "";
+        strLED6 = "";
+        strLED7 = "";
+        strLED8 = "";
+        strLED9 = "";
+        strLED10 = "";
+        strLED11 = "";
+        strLED12 = "";
+        strLED13 = "";
+        //Кондиционер
+        //strLED14 = "";
+		var LED3_state = 0;
+		var LED4_state = 0;
+        var LED5_state = 0; 
+        var LED6_state = 0;
+        var LED7_state = 0;
+        var LED8_state = 0;
+        var LED9_state = 0;
+        var LED10_state = 0;
+        var LED11_state = 0;
+        var LED12_state = 0;
+        var LED13_state = 0;
+        //Кондиционер
+        //var LED14_state = 0;
+
+		function GetArduinoIO()
+		{
+			nocache = "&nocache=" + Math.random() * 1000000;
+			var request = new XMLHttpRequest();
+			request.onreadystatechange = function()
+			{
+
+				if (this.readyState == 4) {
+					if (this.status == 200) {
+						if (this.responseXML != null) {
+							
+              
+              // XML file received - contains analog values, switch values and LED states
+							var count;
+              
+              // Напряжения основного ввода
+              var num_an = this.responseXML.getElementsByTagName('voltage').length;
+							for (count = 0; count < num_an; count++) {
+								document.getElementsByClassName("voltage")[count].innerHTML =
+									this.responseXML.getElementsByTagName('voltage')[count].childNodes[0].nodeValue;
+							}
+             
+              // document.getElementById("input3").innerHTML = this.responseXML.getElementsByTagName('analog2')[0].childNodes[0].nodeValue;
+              
+							// get analog inputs
+              var num_an = this.responseXML.getElementsByTagName('analog').length;
+							for (count = 0; count < num_an; count++) {
+								document.getElementsByClassName("analog")[count].innerHTML =
+									this.responseXML.getElementsByTagName('analog')[count].childNodes[0].nodeValue;
+							}
+							// get switch inputs
+							var num_an = this.responseXML.getElementsByTagName('switch').length;
+							for (count = 0; count < num_an; count++) {
+								document.getElementsByClassName("switches")[count].innerHTML =
+									this.responseXML.getElementsByTagName('switch')[count].childNodes[0].nodeValue;
+            
+                  //document.getElementById("test").classList.add('badge-success');
+                  //document.getElementById("test").classList.add('badge-danger');
+							}
+							// RELAY 1
+							if (this.responseXML.getElementsByTagName('LED')[2].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED3").innerHTML = "Выключить Грязь (D23)";
+								LED3_state = 1;
+							}
+							else {
+								document.getElementById("LED3").innerHTML = "Включить Грязь (D23)";
+								LED3_state = 0;
+							}
+							// RELAY 2
+							if (this.responseXML.getElementsByTagName('LED')[3].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED4").innerHTML = "Выключить стабилизатор (D25)";
+								LED4_state = 1;
+							}
+							else {
+								document.getElementById("LED4").innerHTML = "Включить стабилизатора (D25)";
+								LED4_state = 0;
+							}
+              // RELAY 3
+							if (this.responseXML.getElementsByTagName('LED')[4].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED5").innerHTML = "Выключить нагрузку 1 D27)";
+								LED5_state = 1;
+							}
+							else {
+								document.getElementById("LED5").innerHTML = "Включить нагрузку 1 D27)";
+								LED5_state = 0;
+							}
+              // RELAY 4
+							if (this.responseXML.getElementsByTagName('LED')[5].childNodes[0].nodeValue === "on") {
+								document.getElementById("LED6").innerHTML = "Выключить нагрузку 2 (D29)";
+								LED6_state = 1;
+							}
+							else {
+								document.getElementById("LED6").innerHTML = "Включить нагрузку 2 (D29)";
+								LED6_state = 0;
+							}
+              // RELAY 5
+              if (this.responseXML.getElementsByTagName('LED')[6].childNodes[0].nodeValue === "on") {
+                document.getElementById("LED7").innerHTML = "Выключить нагрузку 3 (D31)";
+                LED7_state = 1;
+              }
+              else{
+                document.getElementById("LED7").innerHTML = "Включить нагрузку 3 (D31)";
+                LED7_state = 0;
+              }
+              // RELAY 6
+              if (this.responseXML.getElementsByTagName('LED')[7].childNodes[0].nodeValue === "on") {
+                document.getElementById("LED8").innerHTML = "Выключения вентилятора 1 (D33)";
+                LED8_state = 1;
+              }
+              else{
+                document.getElementById("LED8").innerHTML = "Включения вентелятора 1 (D33)";
+                LED8_state = 0;
+              }
+              // RELAY 7
+              if (this.responseXML.getElementsByTagName('LED')[8].childNodes[0].nodeValue === "on") {
+                document.getElementById("LED9").innerHTML = "Выключения вентилятора 2 (D35)";
+                LED9_state = 1;
+              }
+              else{
+                document.getElementById("LED9").innerHTML = "Включения вентилятора 2 (D35)";
+                LED9_state = 0;
+              }
+              // RELAY 8
+              if (this.responseXML.getElementsByTagName('LED')[9].childNodes[0].nodeValue === "on"){
+                document.getElementById("LED10").innerHTML = "Выключить вентилятора 3 (D37)";
+                LED10_state = 1;
+              }
+              else{
+                document.getElementById("LED10").innerHTML = "Включить вентилятора 3 (D37)";
+                LED10_state = 0;
+              }
+              // RELAY 9
+              if (this.responseXML.getElementsByTagName('LED')[10].childNodes[0].nodeValue === "on"){
+                document.getElementById("LED11").innerHTML = "Выключить вентилятора 4 (D22)";
+                LED11_state = 1;
+              }
+              else{
+                document.getElementById("LED11").innerHTML = "Включить вентилятора 4 (D22)";
+                LED11_state = 0;
+              }
+              // RELAY 10
+              if (this.responseXML.getElementsByTagName('LED')[11].childNodes[0].nodeValue === "on"){
+                document.getElementById("LED12").innerHTML = "Выключить вентилятора 5 (D24)";
+                LED12_state = 1;
+              }
+              else{
+                document.getElementById("LED12").innerHTML = "Включить вентилятора 5 (D24)";
+                LED12_state = 0;
+              }
+              // RELAY 11
+              if (this.responseXML.getElementsByTagName('LED')[12].childNodes[0].nodeValue === "on"){
+                document.getElementById("LED13").innerHTML = "Выключить спец оборудование (Pin D26)";
+                LED13_state = 1;
+              }
+              else{
+                document.getElementById("LED13").innerHTML = "Включить спец оборудование (Pin D26)";
+                LED13_state = 0;
+              }
+              // Кондиционер
+
+                            
+                            
+                            
+						}
+					}
+				}
+			}
+			// send HTTP GET request with LEDs to switch on/off if any
+			request.open("GET", "ajax_inputs" + strLED3 + strLED4 + strLED5 + strLED6 + strLED7 + strLED8 + strLED9 + strLED10 + strLED11 + strLED12 + strLED13 + nocache, true);
+			request.send(null);
+			setTimeout('GetArduinoIO()', 1000);
+			strLED3 = "";
+			strLED4 = "";
+      strLED5 = "";
+      strLED6 = "";
+      strLED7 = "";
+      strLED8 = "";
+      strLED9 = "";
+      strLED10 = "";
+      strLED11 = "";
+      strLED12 = "";
+      strLED13 = "";
+		}
+		// service LEDs when checkbox checked/unchecked
+		function GetButton1()
+		{
+			if (LED3_state === 1) {
+				LED3_state = 0;
+				strLED3 = "&LED3=0";
+			}
+			else {
+				LED3_state = 1;
+				strLED3 = "&LED3=1";
+			}
+		}
+		function GetButton2()
+		{
+			if (LED4_state === 1) {
+				LED4_state = 0;
+				strLED4 = "&LED4=0";
+			}
+			else {
+				LED4_state = 1;
+				strLED4 = "&LED4=1";
+			}
+		}    
+        function GetButton3()
+		{
+			if (LED5_state === 1) {
+				LED5_state = 0;
+				strLED5 = "&LED5=0";
+			}
+			else {
+				LED5_state = 1;
+				strLED5 = "&LED5=1";
+			}
+		}
+        function GetButton4()
+		{
+			if (LED6_state === 1) {
+				LED6_state = 0;
+				strLED6 = "&LED6=0";
+			}
+			else {
+				LED6_state = 1;
+				strLED6 = "&LED6=1";
+			}
+		}
+        function GetButton5()
+    {
+      if (LED7_state === 1){
+        LED7_state = 0;
+        strLED7 = "&LED7=0";
+      }
+      else{
+        LED7_state = 1;
+        strLED7 = "&LED7=1"
+      }
+    }
+        function GetButton6()
+        {
+          if (LED8_state === 1){
+            LED8_state = 0;
+            strLED8 = "&LED8=0";
+          }
+          else{
+            LED8_state = 1;
+            strLED8 = "&LED8=1"
+          }
+        }
+        function GetButton7()
+        {
+          if (LED9_state === 1){
+            LED9_state = 0;
+            strLED9 = "&LED9=0";
+          }
+          else{
+            LED9_state = 1;
+            strLED9 = "&LED9=1";
+          }
+        }
+        function GetButton8()
+        {
+          if (LED10_state === 1){
+            LED10_state = 0;
+            strLED10 = "&LED10=0";
+          }
+          else{
+            LED10_state = 1;
+            strLED10 = "&LED10=1";
+          }
+        }
+        function GetButton9()
+        {
+          if (LED11_state === 1){
+            LED11_state = 0;
+            strLED11 = "&LED11=0";
+          }
+          else{
+            LED11_state = 1;
+            strLED11 = "&LED11=1";
+          }
+        }
+        function GetButton10()
+        {
+          if (LED12_state === 1){
+            LED12_state = 0;
+            strLED12 = "&LED12=0";
+          }
+          else{
+            LED12_state = 1;
+            strLED12 = "&LED12=1";
+          }
+        }
+        function GetButton11()
+        {
+          if (LED13_state === 1){
+            LED13_state = 0;
+            strLED13 = "&LED13=0";
+          }
+          else{
+            LED13_state = 1;
+            strLED13 = "&LED13=1";
+          }
+        }
+	</script>
+	<style>
+		.fakeimg {
+      height: 200px;
+      background: #aaa;
+  }
+      .btn{margin: 5px;
+      width: 320px;
+      }
+	</style>
+</head>
+  <body onload="GetArduinoIO()">
+      <div class="jumbotron text-center" style="margin-bottom:0">
+        <h1>Панель управления Смарт ЩИТ</h1>
+        <p>Resize this responsive page to see the effect!</p> 
+      </div>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <a class="navbar-brand" href="#">Меню</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Главная</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Логи</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">О Нас</a>
+      </li>    
+    </ul>
+  </div>  
+</nav>
+<div class="container" style="margin-top:30px">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Управления Реле</h3>
+          <button class="btn btn-success" type="button" id="LED3" onclick="GetButton1()">Включения грязи (D23)</button>
+					<button class="btn btn-success" type="button" id="LED4" onclick="GetButton2()">Включения стабилизатора (D25)</button>
+					<button class="btn btn-success" type="button" id="LED5" onclick="GetButton3()">Включения нагрузка 1 (D27)</button>
+					<button class="btn btn-success" type="button" id="LED6" onclick="GetButton4()">Включения нагрузка 2 (D29)</button>
+          <button class="btn btn-success" type="button" id="LED7" onclick="GetButton5()">Включения нагрузка 3 (D31)</button>
+          <button class="btn btn-success" type="button" id="LED8" onclick="GetButton6()">Включения вентилятора 1 (D33)</button>
+          <button class="btn btn-success" type="button" id="LED9" onclick="GetButton7()">Включения вентилятора 2 (D35)</button>
+          <button class="btn btn-success" type="button" id="LED10" onclick="GetButton8()">Включения вентилятора 3 (D37)</button>
+          <button class="btn btn-success" type="button" id="LED11" onclick="GetButton9()">Включения вентилятора 4 (D22)</button>
+          <button class="btn btn-success" type="button" id="LED12" onclick="GetButton10()">Включения вентилятора 5 (D24)</button>
+          <button class="btn btn-success" type="button" id="LED13" onclick="GetButton11()">Включить спец оборудование (D26)</button>
+
+        <hr class="d-sm-none">
+          <h3>Кондиционер (Пульт)</h3>
+          <button class="btn btn-success" type="button" id="" onclick="">Включения</button>
+          <hr class="d-sm-none">
+        <h3>Датчики (Аналоговые)</h3>
+        <p>A2: <span class="analog">...</span></p>
+        <p>A3: <span class="analog">...</span></p>
+        <p>A4: <span class="analog">...</span></p>
+        <p>A5: <span class="analog">...</span></p>
+        <p>Вольт: <span class="voltage">...</span></p>
+      
+      
+    </div>
+    <div class="col-sm-8">
+      <h2>Статусы</h2>
+      <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Название</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>Нижний ряд реле, статус запуска контактора грязного питания (Pin D39):</td>
+                    <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                <tr>
+                     <td>Нижний ряд реле, статус запуска контактора стабилизатора (Pin D41):</td>
+                     <td><span class="badge badge-pill badge-warning switches">Внимание</span></td>
+                </tr>
+                  <tr>
+                    <td>Нижний ряд реле, статус нагрузка 1 (Pin D43):</td>
+                    <td><span class="badge badge-pill badge-danger switches">Выключено</span></td>
+                </tr>
+                <tr>
+                     <td>Нижний ряд реле, статус нагрузка 2 (Pin D45):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                  <tr>
+                    <td>Нижний ряд реле, статус нагрузка 3 (Pin D47):</td>
+                    <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                <tr>
+                     <td>Нижний ряд реле, статус автомата на кондиционер 1 (Pin 16А) (D49):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                  <tr>
+                    <td>Нижний ряд реле, статус автомата на кондиционер 2 (Pin 16А) (D51):</td>
+                    <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                <tr>
+                     <td>Нижний ряд реле, статус автомата (2А) на вентилятор 1 который включается на щите от кнопки 1 (PinD53): </td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                  <tr>
+                    <td>Верхний ряд реле, статус автомата (1А) на вентилятор 2 который включается на щите от кнопки 2 (Pin D15): </td>
+                    <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                <tr>
+                     <td>Верхний ряд реле, статус автомата (1А) на вентилятор 3 который включается на щите от кнопки 3 (Pin D14):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                  <tr>
+                     <td>Верхний ряд реле, статус автомата (1А) на вентилятор 4 который включается на щите от кнопки 4 (Pin D13):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                  <tr>
+                     <td>Верхний ряд реле, статус автомата (1А) на вентилятор 5 который включается на щите от кнопки 5 (Pin D12):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                  <tr>
+                     <td>Верхний ряд реле, статус автомата (16А) на розетку спец оборудования (Pin D11):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                  <tr>
+                     <td>ALARM, статус реле напряжения откл/вкл (Pin D10):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+                   <tr>
+                     <td>Верхний ряд реле, статус реле в РЕЗЕРВЕ (Pin D9):</td>
+                     <td><span class="badge badge-pill badge-success switches">Включино</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    </div>
+  </div>
+</div>
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <p>Power by sunCox1337 <a href="http://status-kz.kz" target="_blank">www.status-kz.kz</a></p>
+    <p>2021</p>
+</div> 
+</body>
+</html>
